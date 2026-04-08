@@ -656,7 +656,7 @@
       <span class="app-title">Oratio2.0</span>
     </div>
     <div class="app-subtitle">Academic presentation coach for postgraduate researchers</div>
-    <div><span class="ted-badge"><span class="ted-dot"></span> Inspired by TED Talk standards</span></div>
+    <div><span class="ted-badge"><span class="ted-dot"></span> Inspired by TED Talks &amp; 3MT standards</span></div>
   </div>
 
   <div class="nav-tabs">
@@ -727,9 +727,8 @@
     <div class="options-row">
       <div class="section-label" style="width:100%;margin-bottom:4px;">Presentation context</div>
       <button class="pill-btn active" onclick="setContext(this,'conference')">Conference paper</button>
-      <button class="pill-btn" onclick="setContext(this,'thesis')">Thesis defence</button>
-      <button class="pill-btn" onclick="setContext(this,'seminar')">Research seminar</button>
-      <button class="pill-btn" onclick="setContext(this,'public')">Public lecture</button>
+      <button class="pill-btn" onclick="setContext(this,'classroom')">Classroom presentation</button>
+      <button class="pill-btn" onclick="setContext(this,'3mt')">3MT</button>
     </div>
 
     <button class="analyze-btn" id="analyze-btn" onclick="analyze()">Analyse my presentation</button>
@@ -874,7 +873,7 @@
     });
 
     // Session list
-    const ctxLabels = { conference: 'Conference paper', thesis: 'Thesis defence', seminar: 'Research seminar', public: 'Public lecture' };
+    const ctxLabels = { conference: 'Conference paper', classroom: 'Classroom presentation', '3mt': '3MT' };
     const sessionList = document.getElementById('session-list');
     sessionList.innerHTML = [...sessions].reverse().map((s, ri) => {
       const i = sessions.length - ri;
@@ -976,7 +975,7 @@
 
     const messages = [
       'Analysing your language and structure…',
-      'Comparing against TED Talk patterns…',
+      'Comparing against TED Talk & 3MT patterns…',
       'Evaluating cohesion and flow…',
       'Preparing your personalised report…'
     ];
@@ -986,10 +985,22 @@
       document.getElementById('loading-text').textContent = messages[mi];
     }, 2200);
 
-    const ctxMap = { conference: 'academic conference presentation', thesis: 'PhD thesis defence', seminar: 'research seminar', public: 'public lecture for a general audience' };
+    const ctxMap = { conference: 'academic conference presentation', classroom: 'postgraduate classroom presentation', '3mt': 'Three Minute Thesis (3MT) competition presentation' };
     const ctxLabel = ctxMap[presentationContext] || 'academic presentation';
 
-    const systemPrompt = `You are an expert academic language coach for postgraduate students who are non-native speakers of English. Your feedback is inspired by TED Talk speaking standards — clarity, engagement, precise vocabulary, strong narrative arc, and audience awareness.
+    const is3MT = presentationContext === '3mt';
+    const modelDesc = is3MT
+      ? 'Three Minute Thesis (3MT) competition presentations and TED Talks'
+      : 'TED Talks and Three Minute Thesis (3MT) presentations';
+
+    const tipLabel = is3MT ? '3MT tip' : 'TED & 3MT tip';
+
+    const systemPrompt = `You are an expert academic language coach for postgraduate students who are non-native speakers of English. Your feedback draws on two gold-standard models of academic communication:
+
+1. TED Talks — known for clarity, storytelling, precise vocabulary, strong narrative arc, and engaging a broad audience
+2. Three Minute Thesis (3MT) — known for distilling complex research into accessible, compelling, jargon-free language within strict time constraints, with a single static slide
+
+${is3MT ? `This student is preparing a 3MT presentation. Apply 3MT-specific standards: the presentation must be exactly 3 minutes, use no jargon, be accessible to a non-specialist audience, follow the 3MT judging criteria (comprehension, engagement, communication), and make a single clear "so what" argument about the research significance.` : `This student is preparing a ${ctxLabel}. Apply standards appropriate for this context, drawing on both TED Talk and 3MT principles of clarity, engagement, and accessible academic communication.`}
 
 Analyse the student's presentation excerpt and return ONLY valid JSON (no markdown, no preamble) with this exact structure:
 {
@@ -1004,7 +1015,7 @@ Analyse the student's presentation excerpt and return ONLY valid JSON (no markdo
       "summary": "one sentence summary",
       "positives": ["up to 2 specific things done well"],
       "improvements": ["2-3 specific, actionable improvements with brief examples"],
-      "ted_tip": "one practical tip inspired by how TED speakers handle grammar and precision"
+      "ted_tip": "one practical tip inspired by ${modelDesc} on grammar and precision"
     },
     {
       "name": "Vocabulary & Register",
@@ -1014,7 +1025,7 @@ Analyse the student's presentation excerpt and return ONLY valid JSON (no markdo
       "summary": "one sentence summary",
       "positives": ["up to 2 specific vocabulary strengths"],
       "improvements": ["2-3 specific suggestions with better word/phrase alternatives"],
-      "ted_tip": "one practical tip inspired by TED speaker vocabulary use"
+      "ted_tip": "one practical tip inspired by ${modelDesc} on vocabulary — especially avoiding jargon and choosing words a non-specialist would understand"
     },
     {
       "name": "Cohesion & Flow",
@@ -1024,7 +1035,7 @@ Analyse the student's presentation excerpt and return ONLY valid JSON (no markdo
       "summary": "one sentence summary",
       "positives": ["up to 2 cohesion strengths"],
       "improvements": ["2-3 suggestions on linking, transitions, referencing"],
-      "ted_tip": "one tip from how TED speakers create flow between ideas"
+      "ted_tip": "one tip from ${modelDesc} on creating smooth flow between ideas"
     },
     {
       "name": "Structure & Logic",
@@ -1033,8 +1044,8 @@ Analyse the student's presentation excerpt and return ONLY valid JSON (no markdo
       "level": "good|mid|low",
       "summary": "one sentence summary",
       "positives": ["up to 2 structural strengths"],
-      "improvements": ["2-3 suggestions on argument structure and idea organisation"],
-      "ted_tip": "one tip from how TED speakers organise their narrative"
+      "improvements": ["2-3 suggestions on argument structure and idea organisation${is3MT ? ', with attention to the 3MT judging criteria: opening hook, research significance, and memorable conclusion within 3 minutes' : ''}"],
+      "ted_tip": "one tip from ${modelDesc} on organising a compelling narrative arc"
     }
   ]
 }`;
@@ -1123,7 +1134,7 @@ Analyse the student's presentation excerpt and return ONLY valid JSON (no markdo
           ${positivesList ? `<div class="sub-label">What's working</div><ul>${positivesList}</ul>` : ''}
           <div class="sub-label">Suggestions</div>
           <ul>${improvList}</ul>
-          <div class="ted-tip"><span class="ted-tip-icon">★</span><span><strong>TED tip:</strong> ${cat.ted_tip}</span></div>
+          <div class="ted-tip"><span class="ted-tip-icon">★</span><span><strong>${presentationContext === '3mt' ? '3MT tip' : 'TED & 3MT tip'}:</strong> ${cat.ted_tip}</span></div>
         </div>
       </div>`;
     });

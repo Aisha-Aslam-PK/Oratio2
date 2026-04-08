@@ -1,7 +1,7 @@
 # Oratio2.0 🎙️
 ### Academic Presentation Coach for Postgraduate Researchers
 
-Oratio2.0 is a browser-based app that helps postgraduate students — especially non-native speakers of English — improve their academic presentation skills. It analyses spoken or written presentation excerpts and provides detailed, personalised feedback inspired by TED Talk standards.
+Oratio2.0 is a browser-based app that helps postgraduate students — especially non-native speakers of English — improve their academic presentation skills. It analyses spoken or written presentation excerpts and provides detailed, personalised feedback inspired by TED Talk and Three Minute Thesis (3MT) standards.
 
 ---
 
@@ -14,7 +14,9 @@ Students record or paste a segment of their academic presentation and receive fe
 - **Cohesion & Flow** — transitions, linking language, how ideas connect
 - **Structure & Logic** — argument organisation, signposting, narrative arc
 
-Each category includes a score, specific praise for what's working, actionable suggestions, and a practical tip drawn from how top TED speakers communicate.
+Each category includes a score, specific praise for what's working, actionable suggestions, and a practical tip drawn from TED Talk and 3MT presentation standards.
+
+Students can select their presentation type — **Conference paper**, **Classroom presentation**, or **3MT** — and the feedback adjusts accordingly. For 3MT, the app applies the official 3MT judging criteria: accessibility to a non-specialist audience, a clear research significance argument, engaging delivery, and a memorable conclusion within three minutes.
 
 The app also tracks progress across sessions, showing score trends over time so students can see their improvement.
 
@@ -119,6 +121,7 @@ Go to the repository on GitHub and click **Compare & pull request**. Write a sho
 - [ ] Export feedback as PDF report
 - [ ] Multi-language interface
 - [ ] Instructor dashboard to review student sessions
+- [ ] 3MT countdown timer with real-time pacing feedback
 
 ---
 
@@ -152,4 +155,4 @@ This project is open source and available under the [MIT Licence](LICENSE).
 
 ## About
 
-Oratio2.0 was created to support postgraduate researchers who are non-native speakers of English, helping them build confidence and clarity in academic communication. It takes inspiration from the clarity, engagement, and narrative strength of TED Talks as a model for effective presentation.
+Oratio2.0 was created to support postgraduate researchers who are non-native speakers of English, helping them build confidence and clarity in academic communication. It draws on two gold standards of accessible academic communication — the clarity and storytelling of TED Talks, and the precision and conciseness of the Three Minute Thesis (3MT) competition.
