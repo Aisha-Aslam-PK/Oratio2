@@ -1,0 +1,44 @@
+.app {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--bg-primary);
+  border-radius: var(--radius-lg);
+  border: 0.5px solid var(--border-light);
+  padding: 2.5rem 2rem;
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.06);
+}
+
+.navTabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 2rem;
+  background: var(--bg-secondary);
+  padding: 4px;
+  border-radius: var(--radius-md);
+}
+
+.navTab {
+  flex: 1;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  border-radius: 6px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.navTabActive {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+@media (max-width: 520px) {
+  .app {
+    padding: 1.5rem 1rem;
+  }
+}

@@ -1,0 +1,96 @@
+.recordZone {
+  border: 0.5px solid var(--border-light);
+  border-radius: var(--radius-lg);
+  background: var(--bg-secondary);
+  padding: 2rem;
+  text-align: center;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.2s;
+}
+
+.recording {
+  border-color: #e74c3c;
+  border-width: 1px;
+}
+
+.recordBtn {
+  width: 76px;
+  height: 76px;
+  border-radius: 50%;
+  background: var(--accent-dark);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1rem;
+  transition: transform 0.15s, background 0.2s;
+  position: relative;
+}
+
+.recordBtn:hover { transform: scale(1.05); }
+
+.recordBtnActive {
+  background: #c0392b;
+}
+
+.recordBtnActive::after {
+  content: '';
+  position: absolute;
+  inset: -7px;
+  border-radius: 50%;
+  border: 2px solid #e74c3c;
+  animation: pulse 1.2s infinite;
+}
+
+@keyframes pulse {
+  0% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.35); }
+}
+
+.recordLabel {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+.timer {
+  font-size: 13px;
+  color: #e74c3c;
+  margin-top: 6px;
+  font-variant-numeric: tabular-nums;
+  min-height: 20px;
+}
+
+.waveform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 36px;
+  margin-top: 14px;
+}
+
+.waveBar {
+  width: 3px;
+  background: var(--accent-dark);
+  border-radius: 2px;
+  opacity: 0.15;
+}
+
+.waveBarActive {
+  opacity: 0.65;
+  animation: wave 0.6s infinite ease-in-out alternate;
+}
+
+@keyframes wave {
+  from { height: 4px; }
+  to { height: 30px; }
+}
+
+.noteMic {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  text-align: center;
+  margin-top: 8px;
+}
