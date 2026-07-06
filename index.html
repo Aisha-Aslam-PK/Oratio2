@@ -1099,7 +1099,7 @@ Return ONLY valid JSON (no markdown, no preamble) with this exact structure:
         },
         body: JSON.stringify({
           model: 'claude-haiku-4-5',
-          max_tokens: 1000,
+          max_tokens: 2000,
           system: systemPrompt,
           messages: [{ role: 'user', content: `Here is a postgraduate student's excerpt from a ${ctxLabel}. Please analyse it carefully.\n\n---\n${text}\n---` }]
         })
