@@ -1041,6 +1041,7 @@ Replace all placeholder values with real assessment of the student text. Keep th
       if (data.error) throw new Error(data.error.message);
       const raw = data.content.map(i => i.text || '').join('');
       const clean = raw.replace(/```json|```/g, '').trim();
+      console.log('RAW RESPONSE:', clean);
       const jsonMatch = clean.match(/\{[\s\S]*\}/);
       if (!jsonMatch) throw new Error('No valid JSON in response');
       const result = JSON.parse(jsonMatch[0]);
