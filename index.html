@@ -995,98 +995,30 @@
 
     const tipLabel = is3MT ? '3MT tip' : 'TED & 3MT tip';
 
-    const systemPrompt = `You are an expert academic language coach for postgraduate students who are non-native speakers of English. Your feedback draws on two gold-standard models of academic communication:
+    const structureImprovements = is3MT
+      ? "2-3 specific improvements to reach the next rubric level, with attention to 3MT structure: hook, research significance, memorable conclusion"
+      : "2-3 specific improvements to reach the next rubric level";
 
-1. TED Talks — known for clarity, storytelling, precise vocabulary, strong narrative arc, and engaging a broad audience
-2. Three Minute Thesis (3MT) — known for distilling complex research into accessible, compelling, jargon-free language within strict time constraints
+    const systemPrompt = `You are an expert academic language coach for postgraduate students who are non-native speakers of English. Your feedback draws on TED Talks and Three Minute Thesis (3MT) standards.
 
-${is3MT ? `This student is preparing a 3MT presentation. Apply 3MT-specific standards: accessible to a non-specialist audience, a single clear research significance argument, engaging delivery, and a memorable conclusion within 3 minutes.` : `This student is preparing a ${ctxLabel}. Apply standards appropriate for this context, drawing on both TED Talk and 3MT principles.`}
+${is3MT ? "This student is preparing a 3MT presentation. Apply 3MT-specific standards: accessible to a non-specialist audience, a single clear research significance argument, engaging delivery, and a memorable conclusion within 3 minutes." : "This student is preparing a " + ctxLabel + ". Apply standards appropriate for this context, drawing on both TED Talk and 3MT principles."}
 
-You MUST score each category using the following rubric. Each criterion is scored 1–4:
+Score each category using this rubric (score 1 to 4):
 
-RUBRIC:
+STRUCTURE: 1=disjointed no clear structure, 2=some structure unclear transitions, 3=clear intro body conclusion smooth transitions, 4=strong cohesive well-signposted throughout.
 
-1. Structure of Presentation
-   - 1 (Limited): Lacks clear beginning, body, and end. Ideas are disjointed.
-   - 2 (Developing): Attempt at structure but transitions are unclear; some logical flow.
-   - 3 (Proficient): Clear structure with recognizable introduction, body, and conclusion. Transitions mostly smooth.
-   - 4 (Strong): Strong and cohesive structure with well-signposted transitions; smooth flow throughout.
+GRAMMAR (CEFR): 1=frequent errors impede understanding A1-A2, 2=basic control errors noticeable low B1, 3=good control few errors mid-high B1, 4=wide range high accuracy B2+.
 
-2. Grammatical Accuracy (CEFR A2–B2)
-   - 1 (Limited): Frequent errors impede understanding (A1–A2 level).
-   - 2 (Developing): Some basic grammatical control, though errors are noticeable (low B1).
-   - 3 (Proficient): Generally good control of simple and some complex forms; few errors (mid–high B1).
-   - 4 (Strong): Uses a range of grammatical structures with high accuracy and flexibility (B2+).
+VOCABULARY: 1=limited repetitive no academic register, 2=some variety attempts academic occasional misuse, 3=appropriate range mostly accurate, 4=wide precise academic and topic-specific terms.
 
-3. Vocabulary Range and Appropriacy (CEFR A2–B2)
-   - 1 (Limited): Limited vocabulary; repetitive or incorrect word choices; lacks academic register.
-   - 2 (Developing): Some variety; attempts to use academic vocabulary; occasional misuse.
-   - 3 (Proficient): Appropriate range of vocabulary, including some academic terms; mostly accurate.
-   - 4 (Strong): Wide lexical range; precise and appropriate use of academic and topic-specific terms.
+ENGAGEMENT: 1=no figurative language no audience connection, 2=occasional hooks or rhetorical questions, 3=generally engaging uses some hooks or rhetoric, 4=highly engaging persuasive rhetorical questions hooks metaphor well-integrated.
 
-4. Audience Engagement and Persuasion
-   - 1 (Limited): No figurative language used, lacks connection with the audience.
-   - 2 (Developing): Occasional attempts to engage the audience; may use figurative language, hook, survey question, or rhetorical questions.
-   - 3 (Proficient): Generally engaging; uses some rhetorical questions or hooks to persuade or connect.
-   - 4 (Strong): Highly engaging and persuasive; uses rhetorical questions, survey questions and/or hooks, creative and well-integrated use of metaphor/simile/analogy that enhances understanding and engagement.
+Convert rubric score to percentage: 1=25, 2=50, 3=75, 4=100. Overall score is average of four. Level mapping: 25 or 50 = "low", 75 = "mid", 100 = "good".
 
-Scoring instructions:
-- Assign each criterion a score of 1, 2, 3, or 4 based strictly on the rubric descriptors above
-- Convert each rubric score to a percentage score out of 100 as follows: 1=25, 2=50, 3=75, 4=100
-- The overall_score is the average of all four percentage scores (rounded to nearest integer)
-- The "level" field maps as follows: score 25–50 = "low", score 75 = "mid", score 100 = "good"
+Return ONLY a valid JSON object with NO markdown, NO extra text, NO characters outside the JSON. Use this exact structure:
+{"overall_summary":"2-3 sentence honest encouraging assessment","overall_score":75,"categories":[{"name":"Structure of Presentation","icon":"S","score":75,"rubric_level":3,"level":"mid","summary":"one sentence on rubric level awarded and why","positives":["strength 1","strength 2"],"improvements":["${structureImprovements}","improvement 2","improvement 3"],"ted_tip":"one tip from ${modelDesc} on structure"},{"name":"Grammatical Accuracy","icon":"G","score":75,"rubric_level":3,"level":"mid","summary":"one sentence on CEFR level and rubric level","positives":["strength 1","strength 2"],"improvements":["improvement 1","improvement 2","improvement 3"],"ted_tip":"one tip from ${modelDesc} on grammar"},{"name":"Vocabulary & Register","icon":"V","score":75,"rubric_level":3,"level":"mid","summary":"one sentence on vocabulary range and rubric level","positives":["strength 1","strength 2"],"improvements":["improvement 1","improvement 2","improvement 3"],"ted_tip":"one tip from ${modelDesc} on vocabulary"},{"name":"Audience Engagement","icon":"A","score":75,"rubric_level":3,"level":"mid","summary":"one sentence on engagement level and rubric level","positives":["strength 1","strength 2"],"improvements":["improvement 1","improvement 2","improvement 3"],"ted_tip":"one tip from ${modelDesc} on engagement"}]}
 
-Return ONLY valid JSON (no markdown, no preamble) with this exact structure:
-{
-  "overall_summary": "2-3 sentences of overall encouraging but honest assessment referencing the rubric",
-  "overall_score": <integer — average of four percentage scores>,
-  "categories": [
-    {
-      "name": "Structure of Presentation",
-      "icon": "S",
-      "score": <25|50|75|100>,
-      "rubric_level": <1|2|3|4>,
-      "level": "good|mid|low",
-      "summary": "one sentence explaining which rubric level was awarded and why",
-      "positives": ["up to 2 specific things done well, referenced to rubric descriptors"],
-      "improvements": ["2-3 specific, actionable improvements to reach the next rubric level${is3MT ? ', with attention to 3MT structure: hook, research significance, memorable conclusion' : ''}"],
-      "ted_tip": "one practical tip inspired by ${modelDesc} on presentation structure"
-    },
-    {
-      "name": "Grammatical Accuracy",
-      "icon": "G",
-      "score": <25|50|75|100>,
-      "rubric_level": <1|2|3|4>,
-      "level": "good|mid|low",
-      "summary": "one sentence explaining which CEFR level was observed and which rubric level was awarded",
-      "positives": ["up to 2 specific grammatical strengths"],
-      "improvements": ["2-3 specific grammar improvements with brief examples to reach the next rubric level"],
-      "ted_tip": "one practical tip inspired by ${modelDesc} on grammatical precision and clarity"
-    },
-    {
-      "name": "Vocabulary & Register",
-      "icon": "V",
-      "score": <25|50|75|100>,
-      "rubric_level": <1|2|3|4>,
-      "level": "good|mid|low",
-      "summary": "one sentence explaining vocabulary range and register observed and which rubric level was awarded",
-      "positives": ["up to 2 specific vocabulary strengths"],
-      "improvements": ["2-3 specific vocabulary suggestions with better word or phrase alternatives to reach the next rubric level"],
-      "ted_tip": "one practical tip inspired by ${modelDesc} on vocabulary — especially jargon avoidance and precision"
-    },
-    {
-      "name": "Audience Engagement",
-      "icon": "A",
-      "score": <25|50|75|100>,
-      "rubric_level": <1|2|3|4>,
-      "level": "good|mid|low",
-      "summary": "one sentence explaining the level of engagement and persuasion observed and which rubric level was awarded",
-      "positives": ["up to 2 specific engagement strengths — e.g. use of rhetorical questions, hooks, metaphor"],
-      "improvements": ["2-3 specific suggestions to improve audience connection and persuasion to reach the next rubric level"],
-      "ted_tip": "one practical tip inspired by ${modelDesc} on engaging and persuading an audience"
-    }
-  ]
-}`;
+Replace all placeholder values with real assessment of the student text. Keep the exact same JSON structure.`;
 
     try {
       const response = await fetch('https://api.anthropic.com/v1/messages', {
@@ -1109,7 +1041,9 @@ Return ONLY valid JSON (no markdown, no preamble) with this exact structure:
       if (data.error) throw new Error(data.error.message);
       const raw = data.content.map(i => i.text || '').join('');
       const clean = raw.replace(/```json|```/g, '').trim();
-      const result = JSON.parse(clean);
+      const jsonMatch = clean.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) throw new Error('No valid JSON in response');
+      const result = JSON.parse(jsonMatch[0]);
       // Save session to history
       saveSession({
         overall_score: result.overall_score,
